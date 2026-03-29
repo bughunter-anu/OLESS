@@ -82,13 +82,13 @@ app.post('/api/submit-exam', authenticate, (req, res) => {
 });
 
 // Health check + JWT info (production monitoring)
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        jwt_length: JWT_SECRET.length,
-        db: 'Connected',
-        timestamp: new Date().toISOString()
-    });
+app.get('/api/my-subjects', (req, res) => {
+    // Dummy data for now (fix)
+    res.json([
+        { subjectid: 'CS101', subjectname: 'JavaScript & jQuery' },
+        { subjectid: 'WEB201', subjectname: 'HTML/CSS' },
+        { subjectid: 'DB301', subjectname: 'Database' }
+    ]);
 });
 
 // Graceful shutdown
@@ -104,4 +104,13 @@ app.listen(PORT, () => {
     console.log('✅ FIXED: CORS unrestricted | Secure JWT | No setTimeout hacks');
     console.log('👥 admin/admin123 | controller/controller123 | dataop/dataop123');
     console.log('🔒 JWT Secret: ' + JWT_SECRET.substring(0, 20) + '...');
+});
+
+app.get('/api/my-subjects', (req, res) => {
+    console.log("API HIT: /api/my-subjects"); // debug
+    res.json([
+        { subjectid: 'CS101', subjectname: 'JavaScript & jQuery' },
+        { subjectid: 'WEB201', subjectname: 'HTML/CSS' },
+        { subjectid: 'DB301', subjectname: 'Database' }
+    ]);
 });

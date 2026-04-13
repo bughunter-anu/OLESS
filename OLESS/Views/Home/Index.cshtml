@@ -1,0 +1,166 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to OLESS</h1>
+        <p>Online Examination Security System - A modern, secure, and user-friendly platform for conducting online examinations with advanced security features.</p>
+        <div class="hero-buttons">
+            @{
+                var userId = Context.Session.GetInt32("UserID");
+                var role = Context.Session.GetString("Role") ?? "";
+            }
+            @if (userId == null)
+            {
+                <a href="/Account/Login" class="btn btn-primary btn-lg">Login</a>
+                <a href="/Account/Register" class="btn btn-outline btn-lg">Register</a>
+            }
+            else
+            {
+                @if (role == "Admin")
+                {
+                    <a href="/Admin" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                }
+                else if (role == "Student")
+                {
+                    <a href="/Student" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                }
+                else
+                {
+                    <a href="/Home" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h3>Secure Authentication</h3>
+                <p>Role-based access control with encrypted password storage and session management.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <h3>Timer-Based Exams</h3>
+                <p>Automatic time tracking with auto-submit functionality when time expires.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <h3>Random Question Sets</h3>
+                <p>Each student receives a unique set of questions to prevent cheating.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3>Instant Results</h3>
+                <p>Automated evaluation with immediate score calculation and feedback.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                        <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                    </svg>
+                </div>
+                <h3>Detailed Analytics</h3>
+                <p>Comprehensive reports on student performance and subject-wise analysis.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <h3>User Management</h3>
+                <p>Complete control over users, subjects, topics, and question banks.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="background: white; padding: 4rem 0;">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@ViewBag.SubjectCount</h3>
+                    <p>Subjects Available</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@ViewBag.QuestionCount</h3>
+                    <p>Questions in Bank</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <h3>@ViewBag.StudentCount</h3>
+                    <p>Registered Students</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (userId == null)
+{
+    <section style="background: linear-gradient(135deg, #1f2937, #374151); color: white; padding: 4rem 0;">
+        <div class="container text-center">
+            <h2 style="color: white;">Ready to Get Started?</h2>
+            <p style="opacity: 0.9; margin-bottom: 2rem;">Join thousands of students and educators using OLESS for seamless online examinations.</p>
+            <a href="/Account/Register" class="btn btn-primary btn-lg">Create Your Account</a>
+        </div>
+    </section>
+}

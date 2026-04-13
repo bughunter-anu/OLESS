@@ -1,0 +1,106 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Exams";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Exams</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Exams</span>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Difficulty</th>
+                    <th>Total Questions</th>
+                    <th>Answered</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in (List<ExamRecord>)ViewBag.Exams)
+                {
+                    <tr>
+                        <td>@exam.SubjectName</td>
+                        <td>
+                            @if (exam.DifficultyLevel == "Beginner")
+                            {
+                                <span class="badge badge-success">Beginner</span>
+                            }
+                            else if (exam.DifficultyLevel == "Expert")
+                            {
+                                <span class="badge badge-warning">Expert</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Guru</span>
+                            }
+                        </td>
+                        <td>@exam.TotalQuestions</td>
+                        <td>@exam.AnsweredQuestions</td>
+                        <td>
+                            @if (exam.ExamStatus == "Completed")
+                            {
+                                <span class="badge badge-success">Completed</span>
+                            }
+                            else if (exam.ExamStatus == "InProgress")
+                            {
+                                <span class="badge badge-warning">In Progress</span>
+                            }
+                            else if (exam.ExamStatus == "Expired")
+                            {
+                                <span class="badge badge-danger">Expired</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-secondary">Scheduled</span>
+                            }
+                        </td>
+                        <td>@exam.ExamDate.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (exam.ExamStatus == "Completed")
+                            {
+                                <a href="/Student/ViewResult?examId=@exam.ExamID" class="btn btn-sm btn-primary">View Result</a>
+                            }
+                            else if (exam.ExamStatus == "InProgress")
+                            {
+                                <a href="/Student/ExamInterface?examId=@exam.ExamID" class="btn btn-sm btn-warning">Continue</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (ViewBag.Exams == null || ((List<ExamRecord>)ViewBag.Exams).Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">No exam records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="/Student/SelectExam" class="btn btn-primary btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        Take New Exam
+    </a>
+</div>

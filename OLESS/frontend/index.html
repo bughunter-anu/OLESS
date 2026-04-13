@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLESS - Online Examination Security System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-theme="light">
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">O</div>
+                <span>OLESS</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="pages/login.html" class="btn btn-secondary">Login</a>
+                <a href="pages/register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Secure Online Examination Platform</h1>
+                <p class="hero-subtitle">Conduct, manage, and proctor online examinations with confidence. OLESS provides enterprise-grade security with an intuitive interface for institutions worldwide.</p>
+                <div class="hero-actions">
+                    <a href="pages/register.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket"></i> Start Free Trial
+                    </a>
+                    <a href="#features" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-play-circle"></i> Learn More
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Exams Conducted</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Institutions</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Powerful Features</h2>
+                <p>Everything you need for a seamless online examination experience</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Environment</h3>
+                    <p>Advanced anti-cheating measures including copy-paste prevention, tab detection, and randomized questions to ensure exam integrity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Real-time Timer</h3>
+                    <p>Synchronized countdown timers with auto-submit functionality. Students never lose track of their remaining time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <h3>Randomized Questions</h3>
+                    <p>Each student receives a unique set of questions from the question bank, preventing answer sharing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Comprehensive analytics with topic-wise strength/weakness analysis and detailed performance reports.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>Role Management</h3>
+                    <p>Granular role-based access control for admins, operators, and students with distinct permissions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Question Bank</h3>
+                    <p>Organized question bank with MCQ and True/False types, categorized by subject, topic, and difficulty.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2>Built for Modern Education</h2>
+                    <p>OLESS is designed to meet the evolving needs of educational institutions. Our platform combines security, scalability, and simplicity.</p>
+                    <ul class="about-list">
+                        <li><i class="fas fa-check-circle"></i> Bank-grade security with encryption</li>
+                        <li><i class="fas fa-check-circle"></i> Scalable architecture for any institution size</li>
+                        <li><i class="fas fa-check-circle"></i> Intuitive interface for all users</li>
+                        <li><i class="fas fa-check-circle"></i> 24/7 support and monitoring</li>
+                        <li><i class="fas fa-check-circle"></i> Regular backups and data protection</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <div class="about-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h4>Education Focused</h4>
+                        <p>Designed by educators, for educators</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Have questions about OLESS? We'd love to hear from you.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>support@oless.edu</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 989XXXXXXX</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Education Street, Learning City</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="4" placeholder="How can we help?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">O</div>
+                        <span>OLESS</span>
+                    </a>
+                    <p>Empowering educational institutions with secure, reliable online examination solutions.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="pages/login.html">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 OLESS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <style>
+        .hero {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .features-section, .about-section, .contact-section {
+            padding: 5rem 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-content > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+        
+        .about-list {
+            list-style: none;
+        }
+        
+        .about-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+        }
+        
+        .about-list li i {
+            color: var(--success-color);
+        }
+        
+        .about-image {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .about-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            color: white;
+            width: 300px;
+        }
+        
+        .about-card i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .about-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .contact-item i {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .footer {
+            background: var(--bg-secondary);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            max-width: 300px;
+        }
+        
+        .footer-links h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 992px) {
+            .about-grid, .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

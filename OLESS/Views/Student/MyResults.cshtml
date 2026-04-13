@@ -1,0 +1,74 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Results";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Results</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Results</span>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in (List<Result>)ViewBag.Results)
+                {
+                    <tr>
+                        <td>@result.SubjectName</td>
+                        <td>@result.CorrectAnswers/@result.TotalQuestions</td>
+                        <td>@result.Percentage%</td>
+                        <td><span class="badge badge-primary">@result.Grade</span></td>
+                        <td>
+                            @if (result.PassStatus == "Pass")
+                            {
+                                <span class="badge badge-success">Pass</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Fail</span>
+                            }
+                        </td>
+                        <td>@result.EvaluatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <a href="/Student/ViewResult?examId=@result.ExamID" class="btn btn-sm btn-outline">View</a>
+                        </td>
+                    </tr>
+                }
+                @if (ViewBag.Results == null || ((List<Result>)ViewBag.Results).Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">No results available. Take an exam to see your results!</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="/Student/SelectExam" class="btn btn-primary btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        Take New Exam
+    </a>
+</div>

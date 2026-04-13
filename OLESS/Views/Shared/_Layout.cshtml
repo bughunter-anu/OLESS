@@ -1,0 +1,86 @@
+@{
+    var userId = Context.Session.GetInt32("UserID");
+    var role = Context.Session.GetString("Role") ?? "";
+    var fullName = Context.Session.GetString("FullName") ?? "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - OLESS</title>
+    <link rel="stylesheet" href="~/Content/css/style.css">
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    @if (userId != null)
+    {
+        <nav class="navbar">
+            <div class="container">
+                <a href="/" class="navbar-brand">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    OLESS
+                </a>
+                
+                <div class="navbar-menu">
+                    @if (role == "Admin")
+                    {
+                        <a href="/Admin" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">Dashboard</a>
+                        <a href="/Admin/ManageUsers" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "ManageUsers" ? "active" : "")">Users</a>
+                        <a href="/Admin/ManageSubjects" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "ManageSubjects" ? "active" : "")">Subjects</a>
+                        <a href="/Admin/ManageQuestions" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "ManageQuestions" ? "active" : "")">Questions</a>
+                        <a href="/Admin/ViewResults" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "ViewResults" ? "active" : "")">Results</a>
+                    }
+                    else if (role == "Student")
+                    {
+                        <a href="/Student" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Student" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">Dashboard</a>
+                        <a href="/Student/SelectExam" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Student" && ViewContext.RouteData.Values["action"].ToString() == "SelectExam" ? "active" : "")">Take Exam</a>
+                        <a href="/Student/MyResults" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Student" && ViewContext.RouteData.Values["action"].ToString() == "MyResults" ? "active" : "")">Results</a>
+                        <a href="/Student/MyExams" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Student" && ViewContext.RouteData.Values["action"].ToString() == "MyExams" ? "active" : "")">My Exams</a>
+                    }
+                    else if (role == "Operator")
+                    {
+                        <a href="/Operator" class="nav-link">Dashboard</a>
+                        <a href="/Operator/ManageExams" class="nav-link">Exams</a>
+                        <a href="/Operator/ViewResults" class="nav-link">Results</a>
+                    }
+                </div>
+
+                <div class="navbar-end">
+                    <div class="user-info">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>@fullName</span>
+                        <span class="badge badge-info">@role</span>
+                    </div>
+                    <a href="/Account/Logout" class="btn btn-outline" style="border-color: white; color: white;">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
+    }
+
+    <main>
+        @RenderBody()
+    </main>
+
+    @if (userId == null)
+    {
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; @DateTime.Now.Year OLESS - Online Examination Security System. All rights reserved.</p>
+            </div>
+        </footer>
+    }
+
+    <script src="~/Scripts/main.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

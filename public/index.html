@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>OLESS v2.2 - WORKING LOGIN FIX</title>
+    <title>OLESS - LOGIN</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         /* Previous CSS - keeping compact */
@@ -513,50 +513,50 @@
         }
 
         $('#registerForm').on('submit', async function (e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    const password = $('#regPw').val();
-    const confirmPassword = $('#confirmPw').val();
+            const password = $('#regPw').val();
+            const confirmPassword = $('#confirmPw').val();
 
-    // ✅ Empty check
-    if (!password || !confirmPassword) {
-        alert("Please enter password in both fields");
-        return;
-    }
+            // ✅ Empty check
+            if (!password || !confirmPassword) {
+                alert("Please enter password in both fields");
+                return;
+            }
 
-    // ✅ Match check
-    if (password !== confirmPassword) {
-        alert("Passwords do not match");
-        return;
-    }
+            // ✅ Match check
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
 
-    const subjects = Array.from(
-        document.getElementById('regSubjects').selectedOptions
-    ).map(opt => opt.value);
+            const subjects = Array.from(
+                document.getElementById('regSubjects').selectedOptions
+            ).map(opt => opt.value);
 
-    try {
-        const res = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: $('#regName').val(),
-                studentid: $('#regId').val(),
-                password: password,   // ✅ correct place
-                optlevel: $('#regLevel').val(),
-                subjects
-            })
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: $('#regName').val(),
+                        studentid: $('#regId').val(),
+                        password: password,   // ✅ correct place
+                        optlevel: $('#regLevel').val(),
+                        subjects
+                    })
+                });
+
+                const data = await res.json();
+                alert(data.message || data.error);
+
+                if (data.studentid) this.reset();
+
+            } catch (e) {
+                alert('Registration error');
+            }
         });
 
-        const data = await res.json();
-        alert(data.message || data.error);
-
-        if (data.studentid) this.reset();
-
-    } catch (e) {
-        alert('Registration error');
-    }
-});
-        
 
         // Add Question
         $('#questionForm').on('submit', async function (e) {
@@ -794,6 +794,11 @@
             $('#logoutBtn').show();
             loadStudentSubjects();
         }
+
+        window.onblur = function () {
+            if (examTimer) alert("Warning: Tab switching is monitored!");
+        };
+
     </script>
 </body>
 

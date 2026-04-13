@@ -1,0 +1,100 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Profile";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Profile</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Profile</span>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success">@ViewBag.Success</div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Personal Information</h3>
+        </div>
+        <div class="card-body" style="padding: 1.5rem;">
+            <form method="post" action="/Student/UpdateProfile">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="firstName" class="form-control" value="@ViewBag.User?.FirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="lastName" class="form-control" value="@ViewBag.User?.LastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="@ViewBag.User?.Email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" name="phone" class="form-control" value="@ViewBag.Examinee?.Phone">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <input type="text" name="department" class="form-control" value="@ViewBag.Examinee?.Department">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Semester</label>
+                        <input type="number" name="semester" class="form-control" value="@ViewBag.Examinee?.Semester" min="1" max="12">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Account Information</h3>
+        </div>
+        <div class="card-body" style="padding: 1.5rem;">
+            <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem;">
+                <p style="margin-bottom: 0.5rem;"><strong>Username:</strong> @ViewBag.User?.Username</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Role:</strong> <span class="badge badge-info">@ViewBag.User?.Role</span></p>
+                <p style="margin-bottom: 0.5rem;"><strong>Enrollment No:</strong> @ViewBag.Examinee?.EnrollmentNo</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Date of Birth:</strong> @(ViewBag.Examinee?.DateOfBirth.ToString("MMM dd, yyyy"))</p>
+                <p style="margin-bottom: 0.5rem;"><strong>Gender:</strong> @ViewBag.Examinee?.Gender</p>
+                <p style="margin-bottom: 0;"><strong>Registered:</strong> @ViewBag.Examinee?.RegistrationDate.ToString("MMM dd, yyyy")</p>
+            </div>
+
+            <hr style="margin: 1.5rem 0;">
+
+            <h4 style="margin-bottom: 1rem;">Change Password</h4>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" name="currentPassword" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" name="newPassword" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" name="confirmPassword" class="form-control">
+                </div>
+                <button type="button" class="btn btn-outline">Change Password</button>
+            </form>
+        </div>
+    </div>
+</div>

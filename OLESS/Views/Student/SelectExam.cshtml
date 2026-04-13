@@ -1,0 +1,100 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Select Exam";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Select Exam</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Select Exam</span>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Choose Your Subject & Difficulty</h3>
+    </div>
+    <div class="card-body" style="padding: 1.5rem;">
+        <form method="post" action="/Student/StartExam">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <select name="subjectId" class="form-control" required>
+                        <option value="">Select Subject</option>
+                        @foreach (var subject in (List<OLESS.Models.Subject>)ViewBag.Subjects)
+                        {
+                            <option value="@subject.SubjectID">@subject.SubjectCode - @subject.SubjectName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Difficulty Level</label>
+                    <select name="difficultyLevel" class="form-control" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Expert">Expert</option>
+                        <option value="Guru">Guru</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="alert alert-info" style="margin-top: 1rem;">
+                <strong>Exam Rules:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem; padding-left: 0;">
+                    <li>Each exam contains 10 questions</li>
+                    <li>Time limit: 30 minutes</li>
+                    <li>Passing marks: 50%</li>
+                    <li>Each question carries 1 mark</li>
+                    <li>Questions are randomly selected</li>
+                    <li>Exam will auto-submit when time expires</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Start Exam
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <div class="card-header">
+        <h3 class="card-title">Available Subjects</h3>
+    </div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Subject Name</th>
+                    <th>Description</th>
+                    <th>Credits</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subject in (List<OLESS.Models.Subject>)ViewBag.Subjects)
+                {
+                    <tr>
+                        <td><strong>@subject.SubjectCode</strong></td>
+                        <td>@subject.SubjectName</td>
+                        <td>@subject.Description</td>
+                        <td>@subject.Credits</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

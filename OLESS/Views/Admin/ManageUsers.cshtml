@@ -1,0 +1,176 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Manage Users</h1>
+        <div class="breadcrumb">
+            <a href="/Admin">Admin</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Users</span>
+        </div>
+    </div>
+    <button class="btn btn-primary" onclick="showCreateModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add User
+    </button>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in (List<OLESS.Models.User>)ViewBag.Users)
+                {
+                    <tr>
+                        <td>@user.UserID</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td><span class="badge @(user.Role == "Admin" ? "badge-danger" : user.Role == "Student" ? "badge-info" : "badge-secondary")">@user.Role</span></td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge badge-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Inactive</span>
+                            }
+                        </td>
+                        <td>@(user.LastLogin?.ToString("MMM dd, yyyy") ?? "Never")</td>
+                        <td class="table-actions">
+                            <button class="btn btn-sm btn-outline" onclick="editUser(@user.UserID, '@user.FirstName', '@user.LastName', '@user.Email', '@user.Role', @user.IsActive.ToString().ToLower())">Edit</button>
+                            <form method="post" action="/Admin/DeleteUser" style="display: inline;">
+                                <input type="hidden" name="userId" value="@user.UserID" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" id="userModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Add User</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="userForm" method="post">
+                <input type="hidden" id="editUserId" name="userId" />
+                <div id="createFields">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="passwordField" required>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="firstName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="lastName" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group" id="roleField">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-control" required>
+                        @foreach (var role in (List<string>)ViewBag.Roles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group" id="activeField" style="display: none;">
+                    <label class="form-check">
+                        <input type="checkbox" name="isActive" checked>
+                        <span>Active</span>
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCreateModal() {
+    document.getElementById('modalTitle').textContent = 'Add User';
+    document.getElementById('userForm').action = '/Admin/CreateUser';
+    document.getElementById('createFields').style.display = 'block';
+    document.getElementById('passwordField').required = true;
+    document.getElementById('roleField').style.display = 'block';
+    document.getElementById('activeField').style.display = 'none';
+    document.getElementById('userForm').reset();
+    document.getElementById('editUserId').value = '';
+    document.getElementById('userModal').classList.add('active');
+}
+
+function editUser(id, firstName, lastName, email, role, isActive) {
+    document.getElementById('modalTitle').textContent = 'Edit User';
+    document.getElementById('userForm').action = '/Admin/UpdateUser';
+    document.getElementById('createFields').style.display = 'none';
+    document.getElementById('passwordField').required = false;
+    document.getElementById('roleField').style.display = 'none';
+    document.getElementById('activeField').style.display = 'block';
+    document.getElementById('editUserId').value = id;
+    
+    document.querySelector('input[name="firstName"]').value = firstName;
+    document.querySelector('input[name="lastName"]').value = lastName;
+    document.querySelector('input[name="email"]').value = email;
+    document.querySelector('input[name="isActive"]').checked = isActive === 'true';
+    
+    document.getElementById('userModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('userModal').classList.remove('active');
+}
+
+function submitForm() {
+    document.getElementById('userForm').submit();
+}
+</script>

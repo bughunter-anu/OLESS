@@ -1,0 +1,54 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Contact";
+}
+
+<section style="background: white; padding: 4rem 0;">
+    <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+            <h1>Contact Us</h1>
+            <p style="color: #6b7280; margin-bottom: 3rem;">
+                Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+        </div>
+
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="card">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-control" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" rows="5" placeholder="Your message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <h3>Other Ways to Reach Us</h3>
+                <div style="margin-top: 1.5rem;">
+                    <p style="margin-bottom: 0.5rem;">
+                        <strong>Email:</strong> support@oless.edu
+                    </p>
+                    <p style="margin-bottom: 0.5rem;">
+                        <strong>Phone:</strong> +1 (555) 123-4567
+                    </p>
+                    <p>
+                        <strong>Address:</strong> 123 Education Street, Knowledge City
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

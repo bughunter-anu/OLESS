@@ -1,0 +1,145 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Welcome, @Context.Session.GetString("FullName")!</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Dashboard</span>
+        </div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.TotalExams</h3>
+            <p>Exams Taken</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.PassedExams</h3>
+            <p>Passed</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@(ViewBag.TotalExams - ViewBag.PassedExams)</h3>
+            <p>Failed</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@(ViewBag.TotalExams > 0 ? Math.Round((double)ViewBag.PassedExams / ViewBag.TotalExams * 100) : 0)%</h3>
+            <p>Pass Rate</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="card-body">
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <a href="/Student/SelectExam" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    Take New Exam
+                </a>
+                <a href="/Student/MyResults" class="btn btn-outline">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    View My Results
+                </a>
+                <a href="/Student/Profile" class="btn btn-outline">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Update Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Recent Results</h3>
+            <a href="/Student/MyResults" class="btn btn-sm btn-outline">View All</a>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in ((List<Result>)ViewBag.RecentResults).Take(5))
+                    {
+                        <tr>
+                            <td>@result.SubjectName</td>
+                            <td>@result.Percentage%</td>
+                            <td>
+                                @if (result.PassStatus == "Pass")
+                                {
+                                    <span class="badge badge-success">Pass</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Fail</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (ViewBag.RecentResults == null || ((List<Result>)ViewBag.RecentResults).Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">No exam results yet</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

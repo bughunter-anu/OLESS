@@ -1,0 +1,119 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <div class="breadcrumb">
+            <a href="/Admin">Admin</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Dashboard</span>
+        </div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.TotalUsers</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.TotalStudents</h3>
+            <p>Total Students</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.TotalSubjects</h3>
+            <p>Active Subjects</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <h3>@ViewBag.TotalQuestions</h3>
+            <p>Total Questions</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Recent Results</h3>
+        <a href="/Admin/ViewResults" class="btn btn-sm btn-outline">View All</a>
+    </div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in (List<Result>)ViewBag.RecentResults)
+                {
+                    <tr>
+                        <td>@result.StudentName</td>
+                        <td>@result.SubjectName</td>
+                        <td>@result.CorrectAnswers/@result.TotalQuestions</td>
+                        <td>@result.Percentage%</td>
+                        <td><span class="badge badge-primary">@result.Grade</span></td>
+                        <td>
+                            @if (result.PassStatus == "Pass")
+                            {
+                                <span class="badge badge-success">Pass</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Fail</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (ViewBag.RecentResults == null || ((List<Result>)ViewBag.RecentResults).Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No results available</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

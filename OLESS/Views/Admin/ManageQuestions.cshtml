@@ -1,0 +1,252 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Manage Questions";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Question Bank</h1>
+        <div class="breadcrumb">
+            <a href="/Admin">Admin</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Questions</span>
+        </div>
+    </div>
+    <button class="btn btn-primary" onclick="showCreateModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Question
+    </button>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Question</th>
+                    <th>Subject</th>
+                    <th>Topic</th>
+                    <th>Type</th>
+                    <th>Difficulty</th>
+                    <th>Marks</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var question in (List<OLESS.Models.Question>)ViewBag.Questions)
+                {
+                    <tr>
+                        <td>@question.QuestionID</td>
+                        <td style="max-width: 300px;">@(question.QuestionText.Length > 80 ? question.QuestionText.Substring(0, 80) + "..." : question.QuestionText)</td>
+                        <td>@question.SubjectName</td>
+                        <td>@(question.TopicName ?? "N/A")</td>
+                        <td><span class="badge badge-info">@question.QuestionType</span></td>
+                        <td>
+                            @if (question.DifficultyLevel == "Beginner")
+                            {
+                                <span class="badge badge-success">Beginner</span>
+                            }
+                            else if (question.DifficultyLevel == "Expert")
+                            {
+                                <span class="badge badge-warning">Expert</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Guru</span>
+                            }
+                        </td>
+                        <td>@question.Marks</td>
+                        <td>
+                            @if (question.IsActive)
+                            {
+                                <span class="badge badge-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Inactive</span>
+                            }
+                        </td>
+                        <td class="table-actions">
+                            <button class="btn btn-sm btn-outline" onclick="viewQuestion(@question.QuestionID)">View</button>
+                            <form method="post" action="/Admin/DeleteQuestion" style="display: inline;">
+                                <input type="hidden" name="questionId" value="@question.QuestionID" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" id="questionModal">
+    <div class="modal" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Add Question</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="questionForm" method="post">
+                <input type="hidden" id="editQuestionId" name="questionId" />
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select name="subjectId" id="subjectSelect" class="form-control" required onchange="loadTopics()">
+                            <option value="">Select Subject</option>
+                            @foreach (var subject in (List<OLESS.Models.Subject>)ViewBag.Subjects)
+                            {
+                                <option value="@subject.SubjectID">@subject.SubjectName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Topic</label>
+                        <select name="topicId" id="topicSelect" class="form-control">
+                            <option value="">Select Topic (Optional)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Question Type</label>
+                        <select name="questionType" id="questionType" class="form-control" required onchange="toggleOptions()">
+                            <option value="MCQ">Multiple Choice (MCQ)</option>
+                            <option value="True/False">True / False</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Difficulty Level</label>
+                        <select name="difficultyLevel" class="form-control" required>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Expert">Expert</option>
+                            <option value="Guru">Guru</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Question Text</label>
+                    <textarea name="questionText" class="form-control" rows="3" required></textarea>
+                </div>
+                <div id="mcqOptions">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Option A</label>
+                            <input type="text" name="optionA" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Option B</label>
+                            <input type="text" name="optionB" class="form-control">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Option C</label>
+                            <input type="text" name="optionC" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Option D</label>
+                            <input type="text" name="optionD" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Correct Answer</label>
+                    <select name="correctAnswer" id="correctAnswer" class="form-control" required>
+                        <option value="">Select Answer</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Marks</label>
+                    <input type="number" name="marks" class="form-control" value="1" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Explanation (Optional)</label>
+                    <textarea name="explanation" class="form-control" rows="2"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCreateModal() {
+    document.getElementById('modalTitle').textContent = 'Add Question';
+    document.getElementById('questionForm').action = '/Admin/CreateQuestion';
+    document.getElementById('editQuestionId').value = '';
+    document.getElementById('questionForm').reset();
+    document.getElementById('questionModal').classList.add('active');
+    document.getElementById('mcqOptions').style.display = 'flex';
+    document.getElementById('correctAnswer').innerHTML = '<option value="">Select Answer</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>';
+}
+
+function toggleOptions() {
+    var type = document.getElementById('questionType').value;
+    var options = document.getElementById('mcqOptions');
+    var correctAnswer = document.getElementById('correctAnswer');
+    
+    if (type === 'True/False') {
+        options.style.display = 'none';
+        correctAnswer.innerHTML = '<option value="">Select Answer</option><option value="True">True</option><option value="False">False</option>';
+    } else {
+        options.style.display = 'flex';
+        correctAnswer.innerHTML = '<option value="">Select Answer</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>';
+    }
+}
+
+function loadTopics() {
+    var subjectId = document.getElementById('subjectSelect').value;
+    var topicSelect = document.getElementById('topicSelect');
+    
+    topicSelect.innerHTML = '<option value="">Loading...</option>';
+    
+    if (subjectId) {
+        fetch('/Admin/GetTopicsBySubject?subjectId=' + subjectId)
+            .then(response => response.json())
+            .then(data => {
+                topicSelect.innerHTML = '<option value="">Select Topic (Optional)</option>';
+                data.forEach(topic => {
+                    topicSelect.innerHTML += '<option value="' + topic.TopicID + '">' + topic.TopicName + '</option>';
+                });
+            });
+    } else {
+        topicSelect.innerHTML = '<option value="">Select Topic (Optional)</option>';
+    }
+}
+
+function viewQuestion(id) {
+    alert('Question view feature - Implement detailed view modal');
+}
+
+function closeModal() {
+    document.getElementById('questionModal').classList.remove('active');
+}
+
+function submitForm() {
+    document.getElementById('questionForm').submit();
+}
+</script>

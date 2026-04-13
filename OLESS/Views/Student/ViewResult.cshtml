@@ -1,0 +1,87 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Exam Result";
+    var result = (Result)ViewBag.Result;
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Exam Result</h1>
+        <div class="breadcrumb">
+            <a href="/Student">Student</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Result</span>
+        </div>
+    </div>
+</div>
+
+<div class="card result-card">
+    <div class="result-icon @(result.PassStatus == "Pass" ? "pass" : "fail")">
+        @if (result.PassStatus == "Pass")
+        {
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        }
+        else
+        {
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+        }
+    </div>
+
+    <h2 style="color: @(result.PassStatus == "Pass" ? "#059669" : "#dc2626");">
+        @(result.PassStatus == "Pass" ? "Congratulations!" : "Keep Trying!")
+    </h2>
+    
+    <div class="result-score">@result.Percentage%</div>
+    <div class="result-percentage">@result.Grade Grade</div>
+
+    <div class="result-details">
+        <div class="result-detail">
+            <h4>Correct</h4>
+            <p style="color: #059669;">@result.CorrectAnswers</p>
+        </div>
+        <div class="result-detail">
+            <h4>Wrong</h4>
+            <p style="color: #dc2626;">@result.WrongAnswers</p>
+        </div>
+        <div class="result-detail">
+            <h4>Unanswered</h4>
+            <p style="color: #6b7280;">@result.Unanswered</p>
+        </div>
+    </div>
+
+    <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+        <p><strong>Subject:</strong> @result.SubjectName</p>
+        <p><strong>Total Questions:</strong> @result.TotalQuestions</p>
+        <p><strong>Score:</strong> @result.CorrectAnswers / @result.TotalQuestions</p>
+        @if (result.TimeTaken.HasValue)
+        {
+            <p><strong>Time Taken:</strong> @result.TimeTaken minutes</p>
+        }
+        <p><strong>Status:</strong> 
+            <span class="badge @(result.PassStatus == "Pass" ? "badge-success" : "badge-danger")">
+                @result.PassStatus
+            </span>
+        </p>
+    </div>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+        <a href="/Student/SelectExam" class="btn btn-primary">Take Another Exam</a>
+        <a href="/Student/MyResults" class="btn btn-outline">View All Results</a>
+        <a href="/Student" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.result-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+</style>

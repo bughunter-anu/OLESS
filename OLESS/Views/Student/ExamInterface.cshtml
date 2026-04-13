@@ -1,0 +1,319 @@
+@using OLESS.Models
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Exam Interface";
+    var exam = (ExamRecord)ViewBag.Exam;
+    var questions = (List<ExamQuestion>)ViewBag.Questions;
+    var currentQuestion = questions.FirstOrDefault();
+}
+
+<style>
+.exam-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.question-palette {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.palette-item {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.palette-item:hover {
+    background: #eff6ff;
+    border-color: #2563eb;
+}
+
+.palette-item.current {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+.palette-item.answered {
+    background: #d1fae5;
+    border-color: #10b981;
+}
+
+.warning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    color: white;
+    text-align: center;
+}
+
+.warning-overlay h2 {
+    color: white;
+}
+</style>
+
+<div class="exam-wrapper">
+    <div class="exam-header">
+        <div>
+            <h2 style="margin: 0;">@exam.SubjectName</h2>
+            <span class="badge badge-@(@exam.DifficultyLevel == "Beginner" ? "success" : @exam.DifficultyLevel == "Expert" ? "warning" : "danger")">@exam.DifficultyLevel</span>
+        </div>
+        <div class="exam-timer" id="timer">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="timeDisplay">@ViewBag.RemainingSeconds</span>
+        </div>
+        <div class="exam-progress">
+            Question <span id="currentQ">1</span> of @exam.TotalQuestions
+        </div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+        <div class="question-text" id="questionText">
+            @currentQuestion?.Question.QuestionText
+        </div>
+
+        @if (currentQuestion?.Question.QuestionType == "MCQ")
+        {
+            <div class="question-options" id="optionsContainer">
+                <label class="option-item" data-option="A">
+                    <input type="radio" name="answer" value="A" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "A" ? "checked" : "")>
+                    <span>@currentQuestion?.Question.OptionA</span>
+                </label>
+                <label class="option-item" data-option="B">
+                    <input type="radio" name="answer" value="B" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "B" ? "checked" : "")>
+                    <span>@currentQuestion?.Question.OptionB</span>
+                </label>
+                <label class="option-item" data-option="C">
+                    <input type="radio" name="answer" value="C" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "C" ? "checked" : "")>
+                    <span>@currentQuestion?.Question.OptionC</span>
+                </label>
+                <label class="option-item" data-option="D">
+                    <input type="radio" name="answer" value="D" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "D" ? "checked" : "")>
+                    <span>@currentQuestion?.Question.OptionD</span>
+                </label>
+            </div>
+        }
+        else
+        {
+            <div class="question-options" id="optionsContainer">
+                <label class="option-item" data-option="True">
+                    <input type="radio" name="answer" value="True" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "True" ? "checked" : "")>
+                    <span>True</span>
+                </label>
+                <label class="option-item" data-option="False">
+                    <input type="radio" name="answer" value="False" @(HttpContext.Session.GetString($"Answer_{currentQuestion?.ExamQuestionID}") == "False" ? "checked" : "")>
+                    <span>False</span>
+                </label>
+            </div>
+        }
+    </div>
+
+    <div class="card" style="padding: 1rem;">
+        <h4 style="margin-bottom: 0.5rem;">Question Navigator</h4>
+        <div class="question-palette" id="questionPalette">
+            @for (int i = 0; i < exam.TotalQuestions; i++)
+            {
+                <div class="palette-item @(i == 0 ? "current" : "")" data-index="@i" onclick="goToQuestion(@i)">
+                    @(i + 1)
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="exam-footer">
+        <div class="question-nav">
+            <button class="btn btn-outline" id="prevBtn" onclick="prevQuestion()" disabled>Previous</button>
+            <button class="btn btn-outline" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+        <button class="btn btn-danger btn-lg" onclick="confirmSubmit()">Submit Exam</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="submitModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Submit Exam</h3>
+            <button class="modal-close" onclick="closeSubmitModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to submit your exam?</p>
+            <p id="answeredCount" style="font-weight: 600;"></p>
+            <p style="color: #dc2626;">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeSubmitModal()">Continue Exam</button>
+            <a href="/Student/SubmitExam?examId=@exam.ExamID" class="btn btn-danger">Submit Exam</a>
+        </div>
+    </div>
+</div>
+
+<script>
+var examId = @exam.ExamID;
+var totalQuestions = @exam.TotalQuestions;
+var currentIndex = 0;
+var remainingTime = @ViewBag.RemainingSeconds;
+var questions = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(questions.Select(q => new {
+    examQuestionId = q.ExamQuestionID,
+    questionId = q.QuestionID,
+    questionType = q.Question.QuestionType,
+    questionText = q.Question.QuestionText,
+    optionA = q.Question.OptionA,
+    optionB = q.Question.OptionB,
+    optionC = q.Question.OptionC,
+    optionD = q.Question.OptionD
+})));
+
+var timerInterval;
+var answeredQuestions = new Set();
+
+function formatTime(seconds) {
+    var mins = Math.floor(seconds / 60);
+    var secs = seconds % 60;
+    return mins.toString().padStart(2, '0') + ':' + secs.toString().padStart(2, '0');
+}
+
+function updateTimer() {
+    remainingTime--;
+    document.getElementById('timeDisplay').textContent = formatTime(remainingTime);
+    
+    if (remainingTime <= 60) {
+        document.getElementById('timer').style.color = '#dc2626';
+    }
+    
+    if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        window.location.href = '/Student/SubmitExam?examId=' + examId;
+    }
+}
+
+timerInterval = setInterval(updateTimer, 1000);
+
+function updateQuestionDisplay() {
+    var q = questions[currentIndex];
+    document.getElementById('currentQ').textContent = (currentIndex + 1);
+    document.getElementById('questionText').textContent = q.questionText;
+    
+    var optionsHtml = '';
+    if (q.questionType === 'MCQ') {
+        optionsHtml = `
+            <label class="option-item" data-option="A">
+                <input type="radio" name="answer" value="A">
+                <span>${q.optionA || ''}</span>
+            </label>
+            <label class="option-item" data-option="B">
+                <input type="radio" name="answer" value="B">
+                <span>${q.optionB || ''}</span>
+            </label>
+            <label class="option-item" data-option="C">
+                <input type="radio" name="answer" value="C">
+                <span>${q.optionC || ''}</span>
+            </label>
+            <label class="option-item" data-option="D">
+                <input type="radio" name="answer" value="D">
+                <span>${q.optionD || ''}</span>
+            </label>
+        `;
+    } else {
+        optionsHtml = `
+            <label class="option-item" data-option="True">
+                <input type="radio" name="answer" value="True">
+                <span>True</span>
+            </label>
+            <label class="option-item" data-option="False">
+                <input type="radio" name="answer" value="False">
+                <span>False</span>
+            </label>
+        `;
+    }
+    document.getElementById('optionsContainer').innerHTML = optionsHtml;
+    
+    document.querySelectorAll('.option-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            this.querySelector('input').checked = true;
+            saveAnswer(q.examQuestionId, this.dataset.option);
+        });
+    });
+    
+    document.getElementById('prevBtn').disabled = currentIndex === 0;
+    document.getElementById('nextBtn').disabled = currentIndex === totalQuestions - 1;
+    
+    document.querySelectorAll('.palette-item').forEach(item => {
+        item.classList.remove('current');
+        if (parseInt(item.dataset.index) === currentIndex) {
+            item.classList.add('current');
+        }
+    });
+}
+
+function saveAnswer(examQuestionId, answer) {
+    fetch('/Student/SaveAnswer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'examQuestionId=' + examQuestionId + '&answer=' + answer
+    }).then(response => response.json()).then(data => {
+        if (data.success) {
+            answeredQuestions.add(examQuestionId);
+            document.querySelector('.palette-item[data-index="' + currentIndex + '"]').classList.add('answered');
+        }
+    });
+}
+
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateQuestionDisplay();
+    }
+}
+
+function nextQuestion() {
+    if (currentIndex < totalQuestions - 1) {
+        currentIndex++;
+        updateQuestionDisplay();
+    }
+}
+
+function goToQuestion(index) {
+    currentIndex = index;
+    updateQuestionDisplay();
+}
+
+function confirmSubmit() {
+    document.getElementById('answeredCount').textContent = 'Answered: ' + answeredQuestions.size + ' / ' + totalQuestions;
+    document.getElementById('submitModal').classList.add('active');
+}
+
+function closeSubmitModal() {
+    document.getElementById('submitModal').classList.remove('active');
+}
+
+document.querySelectorAll('.option-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+</script>

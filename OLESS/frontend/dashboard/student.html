@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - OLESS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body data-theme="light">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">
+                <div class="logo-icon">O</div>
+                <span>OLESS</span>
+            </a>
+            <button class="sidebar-close" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active" data-section="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link" data-section="exams">
+                <i class="fas fa-file-alt"></i>
+                <span>Available Exams</span>
+            </a>
+            <a href="#" class="sidebar-link" data-section="history">
+                <i class="fas fa-history"></i>
+                <span>Exam History</span>
+            </a>
+            <a href="#" class="sidebar-link" data-section="results">
+                <i class="fas fa-chart-bar"></i>
+                <span>My Results</span>
+            </a>
+            <a href="#" class="sidebar-link" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer" style="margin-top: auto; padding-top: 2rem;">
+            <a href="#" class="sidebar-link" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+    
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="mobile-menu" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">My Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-menu">
+                    <img src="https://ui-avatars.com/api/?name=Student&background=10b981&color=fff" alt="User" class="user-avatar" id="userAvatar">
+                    <span class="user-name" id="userName">Student</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="page-content">
+            <section id="dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalExams">0</h3>
+                            <p>Exams Attempted</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="passedExams">0</h3>
+                            <p>Exams Passed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="avgScore">0%</h3>
+                            <p>Average Score</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="highestScore">0%</h3>
+                            <p>Highest Score</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Exams</h3>
+                        </div>
+                        <div id="upcomingExamsList">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h3>No Upcoming Exams</h3>
+                                <p>Check available exams to start practicing</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Performance</h3>
+                        </div>
+                        <div id="recentPerformanceList">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>No Results Yet</h3>
+                                <p>Complete your first exam to see your performance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="exams" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Available Exams</h3>
+                    </div>
+                    
+                    <div class="filters-bar" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <select class="form-control" id="examSubjectFilter" style="max-width: 200px;">
+                            <option value="">All Subjects</option>
+                        </select>
+                        <select class="form-control" id="examLevelFilter" style="max-width: 150px;">
+                            <option value="">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                            <option value="guru">Guru</option>
+                        </select>
+                    </div>
+                    
+                    <div class="exam-cards-grid" id="availableExamsGrid">
+                        <div class="empty-state">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>No Exams Available</h3>
+                            <p>Check back later for new exams</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="history" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Exam History</h3>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Exam</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examHistoryTable">
+                                <tr>
+                                    <td colspan="6" class="empty-state">Loading exam history...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="results" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Results</h3>
+                    </div>
+                    
+                    <div id="resultsContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>No Results Yet</h3>
+                            <p>Complete exams to see your results here</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="profile" class="tab-content">
+                <div class="card" style="max-width: 600px;">
+                    <div class="card-header">
+                        <h3 class="card-title">My Profile</h3>
+                        <button class="btn btn-sm btn-secondary" onclick="showEditProfile()">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-avatar">
+                            <img src="https://ui-avatars.com/api/?name=Student&background=10b981&color=fff&size=120" 
+                                 alt="Profile" id="profileAvatar">
+                        </div>
+                        <div class="profile-details">
+                            <div class="profile-item">
+                                <label>User ID</label>
+                                <span id="profileUserId">-</span>
+                            </div>
+                            <div class="profile-item">
+                                <label>Name</label>
+                                <span id="profileName">-</span>
+                            </div>
+                            <div class="profile-item">
+                                <label>Email</label>
+                                <span id="profileEmail">-</span>
+                            </div>
+                            <div class="profile-item">
+                                <label>Role</label>
+                                <span id="profileRole">-</span>
+                            </div>
+                            <div class="profile-item">
+                                <label>Department</label>
+                                <span id="profileDepartment">-</span>
+                            </div>
+                            <div class="profile-item">
+                                <label>Member Since</label>
+                                <span id="profileCreatedAt">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="max-width: 600px; margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3 class="card-title">Change Password</h3>
+                    </div>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control" name="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" name="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" name="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="startExamModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Start Exam</h3>
+                <button class="modal-close" onclick="closeModal('startExamModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="exam-info">
+                <h4 id="modalExamName">-</h4>
+                <div class="exam-details-grid">
+                    <div class="exam-detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="modalDuration">60 minutes</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span id="modalQuestions">20 Questions</span>
+                    </div>
+                    <div class="exam-detail-item">
+                        <i class="fas fa-star"></i>
+                        <span id="modalTotalMarks">100 Marks</span>
+                    </div>
+                </div>
+                <div class="exam-rules">
+                    <h5><i class="fas fa-exclamation-triangle"></i> Exam Rules</h5>
+                    <ul>
+                        <li>Timer will start once you begin the exam</li>
+                        <li>Exam will auto-submit when time ends</li>
+                        <li>Copy/paste is disabled during exam</li>
+                        <li>Switching tabs will be monitored</li>
+                        <li>You cannot pause the exam once started</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="confirmStartExam()">
+                <i class="fas fa-play"></i> Start Exam
+            </button>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="viewResultModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Exam Result</h3>
+                <button class="modal-close" onclick="closeModal('viewResultModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="resultDetails">
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/student.js"></script>
+    
+    <style>
+        .exam-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .exam-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .exam-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .exam-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .exam-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .exam-card-subject {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .exam-card-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .exam-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .exam-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .profile-info {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        
+        .profile-avatar img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .profile-details {
+            flex: 1;
+        }
+        
+        .profile-item {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .profile-item label {
+            width: 150px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .profile-item span {
+            color: var(--text-primary);
+        }
+        
+        .exam-info h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .exam-details-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .exam-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .exam-detail-item i {
+            color: var(--primary-color);
+        }
+        
+        .exam-rules {
+            padding: 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1.5rem;
+        }
+        
+        .exam-rules h5 {
+            color: var(--warning-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .exam-rules ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .exam-rules li {
+            padding: 0.25rem 0;
+        }
+        
+        .exam-rules li::before {
+            content: "•";
+            margin-right: 0.5rem;
+            color: var(--warning-color);
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .quick-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .quick-action-btn i {
+            font-size: 1.5rem;
+        }
+        
+        .quick-action-btn span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</body>
+</html>

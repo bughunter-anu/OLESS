@@ -1,0 +1,90 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Results";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Exam Results</h1>
+        <div class="breadcrumb">
+            <a href="/Admin">Admin</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Results</span>
+        </div>
+    </div>
+    <a href="/Admin/Reports" class="btn btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+        </svg>
+        View Reports
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">All Results</h3>
+        <select id="subjectFilter" class="form-control" style="width: 200px;" onchange="filterBySubject()">
+            <option value="">All Subjects</option>
+            @foreach (var subject in (List<OLESS.Models.Subject>)ViewBag.Subjects)
+            {
+                <option value="@subject.SubjectID">@subject.SubjectName</option>
+            }
+        </select>
+    </div>
+    <div class="table-container">
+        <table class="table" id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Enrollment</th>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in (List<OLESS.Models.Result>)ViewBag.Results)
+                {
+                    <tr data-subject="@result.SubjectID">
+                        <td>@result.StudentName</td>
+                        <td>@result.EnrollmentNo</td>
+                        <td>@result.SubjectName</td>
+                        <td>@result.CorrectAnswers/@result.TotalQuestions</td>
+                        <td>@result.Percentage%</td>
+                        <td><span class="badge badge-primary">@result.Grade</span></td>
+                        <td>
+                            @if (result.PassStatus == "Pass")
+                            {
+                                <span class="badge badge-success">Pass</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Fail</span>
+                            }
+                        </td>
+                        <td>@result.EvaluatedAt.ToString("MMM dd, yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filterBySubject() {
+    var subjectId = document.getElementById('subjectFilter').value;
+    var rows = document.querySelectorAll('#resultsTable tbody tr');
+    
+    rows.forEach(row => {
+        if (subjectId === '' || row.getAttribute('data-subject') === subjectId) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
